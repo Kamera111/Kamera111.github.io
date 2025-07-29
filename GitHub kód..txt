@@ -3,39 +3,188 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Filmek Anyunak</title>
+  <title>Filmek Anyunak - Belépés</title>
   <style>
     body {
       font-family: sans-serif;
+      background: #ececec;
       text-align: center;
-      padding: 40px;
-      background-color: #fdfdfd;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .main, .pinbox {
+      background: #fff;
+      padding: 36px 24px 28px 24px;
+      border-radius: 18px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.13);
+      max-width: 340px;
+      width: 95%;
+      margin: auto;
     }
     h1 {
-      font-size: 32px;
-      margin-bottom: 40px;
+      margin-bottom: 22px;
+      margin-top: 0;
+      font-size: 2.1rem;
+      font-weight: bold;
     }
-    .film-button {
-      font-size: 20px;
-      padding: 15px 30px;
-      margin: 10px;
-      background-color: #eeeeee;
+    .pinbox {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .pin-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .pin-digit {
+      width: 40px;
+      height: 44px;
+      font-size: 2rem;
+      text-align: center;
       border: 1px solid #aaa;
+      border-radius: 9px;
+      margin-bottom: 10px;
+      outline: none;
+    }
+    .pinpad {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      grid-gap: 12px;
+      margin: 12px 0 0 0;
+      justify-content: center;
+    }
+    .pingomb {
+      background: #e2e2f9;
+      border: none;
       border-radius: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #3217b8;
+      padding: 18px 0;
       cursor: pointer;
-      display: inline-block;
-      text-decoration: none;
-      color: black;
+      transition: background 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+      outline: none;
+    }
+    .pingomb:active { background: #c2b1fa; }
+    .pin-del { color: #c91414; }
+    .pin-err {
+      color: #c91414;
+      font-size: 1rem;
+      margin-top: 10px;
+      min-height: 24px;
+    }
+    /* Mikrofon gomb */
+    .mic-btn {
+      margin: 34px auto 0 auto;
+      background: #7e39ff;
+      color: #fff;
+      font-size: 1.7rem;
+      border: none;
+      border-radius: 18px;
+      padding: 26px 0;
+      width: 100%;
+      max-width: 290px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+      transition: background 0.18s;
+    }
+    .mic-btn:active { background: #4f0aaa; }
+    .mic-icon {
+      width: 30px;
+      height: 30px;
+      vertical-align: middle;
+      fill: #fff;
+    }
+    @media (max-width: 430px) {
+      .main, .pinbox { padding: 20px 3vw 20px 3vw; }
+      .mic-btn { font-size: 1.23rem; }
+      h1 { font-size: 1.45rem; }
     }
   </style>
 </head>
 <body>
-  <h1>Filmek Anyunak</h1>
-
-  <a class="film-button" href="https://videa.hu/videok/film-animacio/szerelem-viharban-romantikus-2020-feliratos-XYZ123" target="_blank">
-    Nézd meg a filmet
-  </a>
-
-  <p style="margin-top: 60px; font-size: 14px; color: #888">Ezt a gombot Csabi bármikor frissítheti egy új filmmel.</p>
+  <div id="pinDiv" class="pinbox">
+    <h1>Kérlek, add meg a PIN-kódot!</h1>
+    <div class="pin-inputs">
+      <input type="password" maxlength="1" inputmode="numeric" class="pin-digit" readonly>
+      <input type="password" maxlength="1" inputmode="numeric" class="pin-digit" readonly>
+      <input type="password" maxlength="1" inputmode="numeric" class="pin-digit" readonly>
+      <input type="password" maxlength="1" inputmode="numeric" class="pin-digit" readonly>
+    </div>
+    <div class="pinpad">
+      <button class="pingomb">1</button>
+      <button class="pingomb">2</button>
+      <button class="pingomb">3</button>
+      <button class="pingomb">4</button>
+      <button class="pingomb">5</button>
+      <button class="pingomb">6</button>
+      <button class="pingomb">7</button>
+      <button class="pingomb">8</button>
+      <button class="pingomb">9</button>
+      <div></div>
+      <button class="pingomb">0</button>
+      <button class="pingomb pin-del">⌫</button>
+    </div>
+    <div class="pin-err" id="pinErr"></div>
+  </div>
+  <div id="mainDiv" class="main" style="display:none;">
+    <h1>Filmek Anyunak</h1>
+    <button class="mic-btn">
+      <svg class="mic-icon" viewBox="0 0 24 24"><path d="M12 15c1.93 0 3.5-1.57 3.5-3.5v-5c0-1.93-1.57-3.5-3.5-3.5s-3.5 1.57-3.5 3.5v5C8.5 13.43 10.07 15 12 15zm5-3.5c0 2.48-2.02 4.5-4.5 4.5S7 13.98 7 11.5H5c0 3.07 2.13 5.64 5 6.32V21h2v-3.18c2.87-.68 5-3.25 5-6.32h-2z"></path></svg>
+      Mikrofon
+    </button>
+  </div>
+  <script>
+    const PIN = "1954";
+    const PIN_KEY = "filmek_anyunak_pin_entered";
+    // ha már volt helyes PIN, fő oldal jön be:
+    if (localStorage.getItem(PIN_KEY) === "ok") {
+      document.getElementById('pinDiv').style.display = 'none';
+      document.getElementById('mainDiv').style.display = '';
+    }
+    // PIN panel logika:
+    let pinInputs = document.querySelectorAll('.pin-digit');
+    let currentPin = [];
+    function updatePinInputs() {
+      for(let i=0;i<4;i++) pinInputs[i].value = currentPin[i] || "";
+    }
+    function submitPIN() {
+      if(currentPin.join("") === PIN) {
+        localStorage.setItem(PIN_KEY, "ok");
+        document.getElementById('pinDiv').style.display = 'none';
+        document.getElementById('mainDiv').style.display = '';
+      } else {
+        document.getElementById('pinErr').innerText = "Hibás PIN!";
+        currentPin = [];
+        updatePinInputs();
+      }
+    }
+    document.querySelectorAll('.pingomb').forEach(btn => {
+      btn.onclick = () => {
+        let val = btn.innerText;
+        if(val === "⌫") {
+          currentPin.pop();
+        } else if(currentPin.length < 4 && /^\d$/.test(val)) {
+          currentPin.push(val);
+        }
+        updatePinInputs();
+        document.getElementById('pinErr').innerText = "";
+        if(currentPin.length === 4) submitPIN();
+      }
+    });
+    updatePinInputs();
+  </script>
 </body>
 </html>
